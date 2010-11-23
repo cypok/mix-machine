@@ -15,9 +15,6 @@
   <property name="windowTitle" >
    <string>Cell #0000</string>
   </property>
-  <property name="windowIcon" >
-   <iconset/>
-  </property>
   <layout class="QVBoxLayout" >
    <item>
     <layout class="QHBoxLayout" >
