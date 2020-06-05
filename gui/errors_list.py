@@ -1,5 +1,6 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 class ErrorsList(QListWidget):
   def __init__(self, parent = None):
@@ -15,11 +16,11 @@ class ErrorsList(QListWidget):
 
   def mouseDoubleClickEvent(self, mouse_event):
     item = self.itemAt(mouse_event.pos())
-    line = unicode(item.text())
+    line = item.text()
     line_num = int( line[0:line.find(':')] ) # cut all before ':'
 
     # find absolute position
-    text = unicode(self.buddy_text.toPlainText())
+    text = self.buddy_text.toPlainText()
     pos = 0
     for _ in range(line_num - 1):
       pos = text.find('\n', pos) + 1

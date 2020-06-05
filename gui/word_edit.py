@@ -1,5 +1,6 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from word_edit_ui import Ui_Dialog
 
@@ -104,11 +105,11 @@ class WordEdit(QDialog, Ui_Dialog):
 
     self.setWindowTitle(self.tr("Word editing")) # Title: "Word editing"
 
-    self.connect(self.type_word, SIGNAL("toggled(bool)"), self.slot_type_word_changed)
-    self.connect(self.type_int, SIGNAL("toggled(bool)"), self.slot_type_int_changed)
-    self.connect(self.type_str, SIGNAL("toggled(bool)"), self.slot_type_str_changed)
+    self.type_word.toggled.connect(self.slot_type_word_changed)
+    self.type_int.toggled.connect(self.slot_type_int_changed)
+    self.type_str.toggled.connect(self.slot_type_str_changed)
 
-    self.connect(self, SIGNAL("finished(int)"), self.slot_finished)
+    self.finished.connect(self.slot_finished)
 
     rxsAll = (
       ( # BASIC
@@ -184,7 +185,7 @@ class WordEdit(QDialog, Ui_Dialog):
     if not self.rxs[self.type].exactMatch(line):
       type_str = ("mix word", "integer", "text")[self.type]
       format_str = self.toolTips[self.type]
-      msg = self.tr("Input had invalid format.\n\nValid format for %1 is '%2'.").arg(type_str, format_str)
+      msg = self.tr("Input had invalid format.\n\nValid format for {0} is '{1}'.").format(type_str, format_str)
       return QMessageBox.critical(self, self.tr("Input error"), msg)
 
     if self.type == STR and line.find('?') != -1:

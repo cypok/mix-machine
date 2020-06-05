@@ -1,5 +1,6 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 import copy
 
@@ -9,7 +10,7 @@ class AbstractCodeView(QTableView):
     self.setModel(self.code_model) # add model to set size of header
     self.horizontalHeader().setStretchLastSection(True) # for column with source line
     self.setSelectionMode(QAbstractItemView.NoSelection)
-    self.connect(self, SIGNAL("doubleClicked(QModelIndex)"), self.addBreakpoint)
+    self.doubleClicked.connect(self.addBreakpoint)
 
   def addBreakpoint(self, index):
     self.code_model.addBreakpoint(index)

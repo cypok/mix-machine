@@ -1,5 +1,6 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from word_edit import word2toolTip
 
@@ -155,10 +156,10 @@ class ListingModel(QAbstractTableModel):
   def lineChanged(self, num):
     """dataChange for all line"""
     if num is not None:
-      self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"),
+      self.dataChanged.emit(
           self.index(num, 0),
           self.index(num, 2))
-      self.emit(SIGNAL("headerDataChanged(Qt::Orientation, int, int)"),
+      self.headerDataChanged.emit(
           Qt.Vertical, num, num)
 
   def hook(self, item, old, new):

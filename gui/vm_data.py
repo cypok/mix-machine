@@ -1,4 +1,4 @@
-from PyQt4.QtCore import *
+from PyQt5.QtCore import *
 
 from word_edit import word2str, word2toolTip
 

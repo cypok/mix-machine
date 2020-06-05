@@ -1,5 +1,6 @@
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from word_edit import word2toolTip
 
@@ -146,10 +147,10 @@ class DisassemblerModel(QAbstractTableModel):
 
   def lineChanged(self, addr):
     """dataChange for all line"""
-    self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"),
+    self.dataChanged.emit(
         self.index(addr, 0),
         self.index(addr, 3))
-    self.emit(SIGNAL("headerDataChanged(Qt::Orientation, int, int)"),
+    self.headerDataChanged.emit(
         Qt.Vertical, addr, addr)
 
   def hook(self, item, old, new):

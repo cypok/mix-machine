@@ -6,8 +6,9 @@ import sys
 import os.path
 import codecs
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 
 from main_ui import Ui_MainWindow
 
@@ -21,6 +22,27 @@ from vm_data import VMData
 PROGRAM_NAME = "Mix Machine"
 
 class MainWindow(QMainWindow, Ui_MainWindow):
+
+  inited = pyqtSignal()
+
+  setNewSource = pyqtSignal()
+  fontChanged = pyqtSignal(QFont)
+
+  sourceTabFocused = pyqtSignal()
+  traceTabFocused = pyqtSignal()
+
+  beforeTrace = pyqtSignal()
+  afterTrace = pyqtSignal()
+  beforeRun = pyqtSignal()
+  afterRun = pyqtSignal("PyQt_PyObject")
+
+  assembleSuccess = pyqtSignal("PyQt_PyObject", "PyQt_PyObject")
+  assembleGotErrors = pyqtSignal("int", "QStringList")
+
+  breaked = pyqtSignal()
+
+  stoppedAction = pyqtSignal()
+
   def __init__(self, parent=None):
     QMainWindow.__init__(self, parent)
 
@@ -41,21 +63,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     self.connect_all()
 
-    self.connect(self.action_Quit, SIGNAL("triggered()"), qApp, SLOT("closeAllWindows()"))
-    self.connect(self.txt_source, SIGNAL("textChanged()"), lambda: self.setWindowModified(True))
+    self.action_Quit.triggered.connect(qApp.closeAllWindows)
+    self.txt_source.textChanged.connect(lambda: self.setWindowModified(True))
 
-    self.connect(self.action_Open, SIGNAL("triggered()"), self.slot_File_Open)
-    self.connect(self.action_New, SIGNAL("triggered()"), self.slot_File_New)
-    self.connect(self.action_Save, SIGNAL("triggered()"), self.slot_File_Save)
-    self.connect(self.action_Save_as, SIGNAL("triggered()"), self.slot_File_SaveAs)
+    self.action_Open.triggered.connect(self.slot_File_Open)
+    self.action_New.triggered.connect(self.slot_File_New)
+    self.action_Save.triggered.connect(self.slot_File_Save)
+    self.action_Save_as.triggered.connect(self.slot_File_SaveAs)
 
-    self.connect(self.action_Assemble, SIGNAL("triggered()"), self.slot_Assemble)
-    self.connect(self.action_Step, SIGNAL("triggered()"), self.slot_Step)
-    self.connect(self.action_Trace, SIGNAL("triggered()"), self.slot_Trace)
-    self.connect(self.action_Run, SIGNAL("triggered()"), self.slot_Run)
-    self.connect(self.action_Break, SIGNAL("triggered()"), self.slot_Break)
+    self.action_Assemble.triggered.connect(self.slot_Assemble)
+    self.action_Step.triggered.connect(self.slot_Step)
+    self.action_Trace.triggered.connect(self.slot_Trace)
+    self.action_Run.triggered.connect(self.slot_Run)
+    self.action_Break.triggered.connect(self.slot_Break)
 
-    self.connect(self.action_Change_font, SIGNAL("triggered()"), self.slot_Change_font)
+    self.action_Change_font.triggered.connect(self.slot_Change_font)
 
     self.errors_list.setBuddyText(self.txt_source)
 
@@ -67,12 +89,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     An implementation of Don Knuth's MIX machine in Python with GUI<br>
     Project's homepage - <a href="http://github.com/be9/mix-machine">http://github.com/be9/mix-machine</a>
     """)
-    self.connect(self.action_About_Mix_Machine, SIGNAL("triggered()"), lambda: QMessageBox.about(self, self.tr("About Mix Machine"), about_text))
-    self.connect(self.action_About_Qt, SIGNAL("triggered()"), qApp, SLOT("aboutQt()"))
+    self.action_About_Mix_Machine.triggered.connect(lambda: QMessageBox.about(self, self.tr("About Mix Machine"), about_text))
+    self.action_About_Qt.triggered.connect(qApp.aboutQt)
 
-    self.connect(self.tabWidget, SIGNAL("currentChanged(int)"), self.slot_cur_tab_changed)
+    self.tabWidget.currentChanged.connect(self.slot_cur_tab_changed)
 
-    self.emit(SIGNAL("inited()"))
+    self.inited.emit()
 
     self.output_device = QTextEditOutputDevice(
         mode = "w", block_size = 24 * 5, lock_time = 24*2, text_edit = self.dev_dock.text_printer
@@ -83,14 +105,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
   def slot_cur_tab_changed(self, index):
     if index == 0:
-      self.emit(SIGNAL("sourceTabFocused()"))
+      self.sourceTabFocused.emit()
     else:
-      self.emit(SIGNAL("traceTabFocused()"))
+      self.traceTabFocused.emit()
 
   def slot_Change_font(self):
     new_font, ok = QFontDialog.getFont(self.txt_source.font())
     if ok:
-      self.emit(SIGNAL("fontChanged(QFont)"), new_font)
+      self.fontChanged.emit(new_font)
 
   def slot_File_New(self):
     if not self.checkUnsaved(): 
@@ -102,7 +124,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     self.setCurrentFile("")
 
-    self.emit(SIGNAL("setNewSource()"))
+    self.setNewSource.emit()
 
     self.statusBar().showMessage(self.tr("Empty source file has been created."), 2000);
 
@@ -122,7 +144,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     return True
 
   def setCurrentFile(self, fname):
-    self.cur_file = unicode(fname)
+    self.cur_file = fname
 
     self.setWindowModified(False)
 
@@ -131,7 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     if self.cur_file != "":
       path, shown_name = os.path.split(self.cur_file)
 
-    self.setWindowTitle(self.trUtf8("%1[*] \xE2\x80\x94 %2").arg(shown_name, PROGRAM_NAME))
+    self.setWindowTitle(self.tr("{0}[*] - {1}").format(shown_name, PROGRAM_NAME))
 
   def slot_File_Save(self):
     if self.cur_file == "":
@@ -144,9 +166,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.cur_file, self.file_filters)
 
     if fn != "":
-      fn = unicode(QDir.toNativeSeparators(fn))
+      fn = QDir.toNativeSeparators(fn)
 
-      base, ext = os.path.splitext(unicode(fn))
+      base, ext = os.path.splitext(fn)
       if ext == '' or ext == '.':
         fn = base + '.mix'
 
@@ -164,15 +186,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     if not self.checkUnsaved():
       return
 
-    fn = QFileDialog.getOpenFileName(self, self.tr("Open file..."), "", self.file_filters)
+    fn, _ = QFileDialog.getOpenFileName(self, self.tr("Open file..."), "", self.file_filters)
 
     if fn != "":
-      self.loadFromFile(unicode(QDir.toNativeSeparators(fn)))
+      self.loadFromFile(QDir.toNativeSeparators(fn))
 
   def saveToFile(self, filename):
     try:
       with codecs.open(filename, "w", "UTF-8") as f:
-        f.write(unicode(self.txt_source.toPlainText()))
+        f.write(self.txt_source.toPlainText())
 
       self.setWindowModified(False)
 
@@ -199,7 +221,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
       self.statusBar().showMessage(self.tr("Error loading file."), 2000)
 
     else:
-      self.emit(SIGNAL("setNewSource()"))
+      self.setNewSource.emit()
 
       self.setCurrentFile(filename)
 
@@ -219,7 +241,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     self.disasm_view.hook(mode, old, new)
 
   def slot_Assemble(self):
-    ret_type, content = asm(unicode(self.txt_source.toPlainText()))
+    ret_type, content = asm(self.txt_source.toPlainText())
     if ret_type == ASM_NO_ERRORS:
       self.asm_data = content # mem, start_addr, listing
       self.vm_data = VMData(self.asm_data) # vm, listing
@@ -231,11 +253,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
       self.input_device.reset()
       self.vm_data.addDevice(19, self.input_device)
 
-      self.emit(SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"), self.vm_data, self.asm_data)
+      self.assembleSuccess.emit(self.vm_data, self.asm_data)
       return
 
     # we have errors! (emit type of errors and list of errors)
-    self.emit(SIGNAL("assembleGotErrors(int, QStringList)"), ret_type, [ "%i: %s" % err for err in content ])
+    self.assembleGotErrors(ret_type, [ "%i: %s" % err for err in content ])
 
   def enableHooks(self, enable = True):
     if enable:
@@ -249,11 +271,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
   def start_action(self):
     self.running = True
-    #self.emit(SIGNAL("startedAction()")) # not used
+    #self.startedAction.emit() # not used
 
   def stop_action(self):
     self.running = False
-    self.emit(SIGNAL("stoppedAction()"))
+    self.stoppedAction.emit()
 
   def doAction(self, action):
     if self.vm_data.halted():
@@ -275,9 +297,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         QMessageBox.information(self, self.tr("Mix machine"), self.tr("Mix machine was halted."))
 
   def slot_Step(self):
-    self.emit(SIGNAL("beforeTrace()"))
+    self.beforeTrace.emit()
     self.doAction(self.vm_data.step)
-    self.emit(SIGNAL("afterTrace()"))
+    self.afterTrace.emit()
 
   def trace_vm(self):
     while not self.vm_data.halted() and self.running:
@@ -295,22 +317,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         break
 
   def slot_Trace(self):
-    self.emit(SIGNAL("beforeTrace()"))
+    self.beforeTrace.emit()
     self.doAction(self.trace_vm)
-    self.emit(SIGNAL("afterTrace()"))
+    self.afterTrace.emit()
 
   def slot_Run(self):
-    self.emit(SIGNAL("beforeRun()"))
+    self.beforeRun.emit()
 
-    self.progress = QProgressDialog(self.tr("Running (%1 cycles passed)").arg(0), self.tr("Break run"), 0, 10, self)
+    self.progress = QProgressDialog(self.tr("Running ({0} cycles passed)").format(0), self.tr("Break run"), 0, 10, self)
     self.progress.setMinimumDuration(0)
     self.progress.setAutoClose(False)
     self.progress.setAutoReset(False)
-    self.connect(self.progress, SIGNAL("canceled()"), self.slot_Break)
+    self.progress.canceled.connect(self.slot_Break)
 
     self.progress_timer = QTimer(self)
-    self.connect(self.progress_timer, SIGNAL("timeout()"), self.progressTick)
-    self.connect(self, SIGNAL("stoppedAction()"), self.progress_timer, SLOT("stop()"))
+    self.progress_timer.timeout.connect(self.progressTick)
+    self.stoppedAction.connect(self.progress_timer.stop)
     self.progress_timer.start(100)
 
     self.progress.setValue(0)
@@ -320,17 +342,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     self.progress.cancel()
     del self.progress, self.progress_timer
 
-    self.emit(SIGNAL("afterRun(PyQt_PyObject)"), self.vm_data)
+    self.afterRun.emit(self.vm_data)
 
   def progressTick(self):
-    self.progress.setLabelText(self.tr("Running (%1 cycles passed)").arg(self.vm_data.cycles()))
+    self.progress.setLabelText(self.tr("Running ({0} cycles passed)").format(self.vm_data.cycles()))
     if self.progress.value() == self.progress.maximum():
       self.progress.setValue(0)
     else:
       self.progress.setValue(self.progress.value() + 1)
 
   def slot_Break(self):
-    self.emit(SIGNAL("breaked()"))
+    self.breaked.emit()
     self.running = False
 
   def resetBreakpointSet(self):
@@ -366,60 +388,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
   def connect_all(self):
     # errors_list
-    self.connect(self, SIGNAL("inited()"),                                        self.errors_list.hide)
-    self.connect(self, SIGNAL("setNewSource()"),                                  self.errors_list.hide)
-    self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"),   self.errors_list.hide)
-    self.connect(self, SIGNAL("assembleGotErrors(int, QStringList)"),             self.errors_list.setErrors)
+    self.inited.connect(            self.errors_list.hide)
+    self.setNewSource.connect(      self.errors_list.hide)
+    self.assembleSuccess.connect(   self.errors_list.hide)
+    self.assembleGotErrors.connect( self.errors_list.setErrors)
 
     # menubar
-    self.connect(self, SIGNAL("inited()"),                                        self.menuBarHideRun)
-    self.connect(self, SIGNAL("setNewSource()"),                                  self.menuBarHideRun)
-    self.connect(self, SIGNAL("assembleGotErrors(int, QStringList)"),             self.menuBarHideRun)
-    self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"),   self.menuBarShowRun)
-    self.connect(self, SIGNAL("afterTrace()"),                                    self.menuBarShowRun)
-    self.connect(self, SIGNAL("afterRun(PyQt_PyObject)"),                         self.menuBarShowRun)
-    self.connect(self, SIGNAL("beforeTrace()"),                                   self.menuBarShowBreak)
-    self.connect(self, SIGNAL("beforeRun()"),                                     self.menuBarShowBreak)
+    self.inited.connect(            self.menuBarHideRun)
+    self.setNewSource.connect(      self.menuBarHideRun)
+    self.assembleGotErrors.connect( self.menuBarHideRun)
+    self.assembleSuccess.connect(   self.menuBarShowRun)
+    self.afterTrace.connect(        self.menuBarShowRun)
+    self.afterRun.connect(          self.menuBarShowRun)
+    self.beforeTrace.connect(       self.menuBarShowBreak)
+    self.beforeRun.connect(         self.menuBarShowBreak)
 
     # tabs
-    self.connect(self, SIGNAL("inited()"),                                        self.tabWidget.hideRun)
-    self.connect(self, SIGNAL("setNewSource()"),                                  self.tabWidget.hideRun)
-    self.connect(self, SIGNAL("assembleGotErrors(int, QStringList)"),             self.tabWidget.hideRun)
-    self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"),   self.tabWidget.showRun)
-    self.connect(self, SIGNAL("traceTabFocused()"),                               self.tabWidget.rememberRunTab)
+    self.inited.connect(            self.tabWidget.hideRun)
+    self.setNewSource.connect(      self.tabWidget.hideRun)
+    self.assembleGotErrors.connect( self.tabWidget.hideRun)
+    self.assembleSuccess.connect(   self.tabWidget.showRun)
+    self.traceTabFocused.connect(   self.tabWidget.rememberRunTab)
 
     # enable and disable hooks
-    self.connect(self, SIGNAL("beforeTrace()"),                           lambda: self.enableHooks(True))
-    self.connect(self, SIGNAL("beforeRun()"),                             lambda: self.enableHooks(False))
+    self.beforeTrace.connect(       lambda: self.enableHooks(True))
+    self.beforeRun.connect(         lambda: self.enableHooks(False))
 
     # txt_source
-    self.connect(self, SIGNAL("fontChanged(QFont)"),                              self.txt_source.setFont)
+    self.fontChanged.connect(       self.txt_source.setFont)
 
     # listing and disassembler
     for widget in (self.listing_view, self.disasm_view):
-      self.connect(self, SIGNAL("inited()"),                                      widget.init)
-      self.connect(self, SIGNAL("fontChanged(QFont)"),                            widget.changeFont)
-      self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"), widget.resetVM)
-      self.connect(self, SIGNAL("beforeRun()"),                                   widget.snapshotMem)
-      self.connect(self, SIGNAL("afterRun(PyQt_PyObject)"),                       widget.updateVM)
+      self.inited.connect(          widget.init)
+      self.fontChanged.connect(     widget.changeFont)
+      self.assembleSuccess.connect( widget.resetVM)
+      self.beforeRun.connect(       widget.snapshotMem)
+      self.afterRun.connect(        widget.updateVM)
 
     # all trace widgets visibility
     for widget in (self.cpu_dock, self.mem_dock, self.dev_dock):
-      self.connect(self, SIGNAL("inited()"),                                      widget.hide)
-      self.connect(self, SIGNAL("sourceTabFocused()"),                            widget.hide)
-      self.connect(self, SIGNAL("traceTabFocused()"),                             widget.show)
+      self.inited.connect(          widget.hide)
+      self.sourceTabFocused.connect(widget.hide)
+      self.traceTabFocused.connect( widget.show)
 
     # cpu_dock
-    self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"),   self.cpu_dock.init)
-    self.connect(self, SIGNAL("afterRun(PyQt_PyObject)"),                         self.cpu_dock.reload)
-    self.connect(self, SIGNAL("beforeRun()"),                                     self.cpu_dock.resetHighlight)
-    self.connect(self, SIGNAL("beforeTrace()"),                                   self.cpu_dock.resetHighlight)
+    self.assembleSuccess.connect(   self.cpu_dock.init)
+    self.afterRun.connect(          self.cpu_dock.reload)
+    self.beforeRun.connect(         self.cpu_dock.resetHighlight)
+    self.beforeTrace.connect(       self.cpu_dock.resetHighlight)
 
     # mem_dock
-    self.connect(self, SIGNAL("assembleSuccess(PyQt_PyObject, PyQt_PyObject)"),   self.mem_dock.init)
-    self.connect(self, SIGNAL("afterRun(PyQt_PyObject)"),                         self.mem_dock.reload)
+    self.assembleSuccess.connect(   self.mem_dock.init)
+    self.afterRun.connect(          self.mem_dock.reload)
 
-    self.connect(self, SIGNAL("setNewSource()"),                                  self.resetBreakpointSet)
+    self.setNewSource.connect(      self.resetBreakpointSet)
 
 if __name__ == "__main__":
   app = QApplication(sys.argv)

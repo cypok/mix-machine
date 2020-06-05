@@ -1,5 +1,6 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 from word_edit import WordEdit, word2str, word2toolTip
 
@@ -54,12 +55,12 @@ class MemoryDockWidget(QDockWidget):
     self.widget.setLayout(self.layout)
     self.setWidget(self.widget)
 
-    self.connect(self.mem_view, SIGNAL("pressed(QModelIndex)"),\
+    self.mem_view.pressed.connect(
         lambda index: self.goto_word.setValue(index.row()))
-    self.connect(self.goto_word, SIGNAL("valueChanged(int)"),\
+    self.goto_word.valueChanged.connect(
         lambda i:  self.mem_view.selectRow(i))
 
-    self.connect(self.mem_view, SIGNAL("doubleClicked(QModelIndex)"), self.slot_mem_view_edit)
+    self.mem_view.doubleClicked.connect(self.slot_mem_view_edit)
 
   def init(self, vm_data):
     self.vm_data = vm_data
@@ -143,8 +144,8 @@ class MemoryModel(QAbstractTableModel):
   def allMemChanged(self):
     indexTop = self.index(0, 0)
     indexBottom = self.index(self.rowCount(self), 0)
-    self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"), indexTop, indexBottom)
+    self.dataChanged.emit(indexTop, indexBottom)
 
   def memChanged(self, addr):
     index = self.index(addr, 0)
-    self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"), index, index)
+    self.dataChanged.emit(index, index)

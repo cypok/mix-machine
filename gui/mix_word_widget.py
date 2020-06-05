@@ -1,5 +1,6 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 from word_edit import *
 
@@ -13,13 +14,15 @@ INDEX = 1
 REGJ  = 2
 
 class MixWordWidget(QLineEdit):
+  valueChanged = pyqtSignal()
+
   def __init__(self, parent = None, type = BASIC):
     QLineEdit.__init__(self, parent)
     self.type = type
     self.setReadOnly(True)
     self.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
     self.setWord()
-    self.connect(self, SIGNAL("textChanged(QString)"), self, SIGNAL("valueChanged()"))
+    self.textChanged.connect(self.valueChanged)
 
   def setWord(self, word = None):
     self.word = Word(word)

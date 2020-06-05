@@ -1,5 +1,6 @@
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 from math import log10 # needed to calculate number of digits in Cycles counter
 
@@ -82,32 +83,32 @@ class CPUDockWidget(QDockWidget):
     self.edit_cycles.display(self.edit_cycles.intValue())
 
   def initConnections(self):
-    self.connect(self.edit_a, SIGNAL("valueChanged()"),                 lambda: self.setVM("a"))
-    self.connect(self.edit_x, SIGNAL("valueChanged()"),                 lambda: self.setVM("x"))
-    self.connect(self.edit_j, SIGNAL("valueChanged()"),                 lambda: self.setVM("j"))
-    self.connect(self.edit_1, SIGNAL("valueChanged()"),                 lambda: self.setVM("1"))
-    self.connect(self.edit_2, SIGNAL("valueChanged()"),                 lambda: self.setVM("2"))
-    self.connect(self.edit_3, SIGNAL("valueChanged()"),                 lambda: self.setVM("3"))
-    self.connect(self.edit_4, SIGNAL("valueChanged()"),                 lambda: self.setVM("4"))
-    self.connect(self.edit_5, SIGNAL("valueChanged()"),                 lambda: self.setVM("5"))
-    self.connect(self.edit_6, SIGNAL("valueChanged()"),                 lambda: self.setVM("6"))
-    self.connect(self.edit_cur_addr, SIGNAL("valueChanged(int)"),       lambda i: self.setVM("cur_addr", i))
-    self.connect(self.edit_cf, SIGNAL("currentIndexChanged(int)"),      lambda index: self.setVM("cf", index))
-    self.connect(self.edit_of, SIGNAL("currentIndexChanged(int)"),      lambda index: self.setVM("of", index))
-    self.connect(self.edit_halted, SIGNAL("currentIndexChanged(int)"),  lambda index: self.setVM("hlt", index))
+    self.edit_a.valueChanged.connect(             lambda: self.setVM("a"))
+    self.edit_x.valueChanged.connect(             lambda: self.setVM("x"))
+    self.edit_j.valueChanged.connect(             lambda: self.setVM("j"))
+    self.edit_1.valueChanged.connect(             lambda: self.setVM("1"))
+    self.edit_2.valueChanged.connect(             lambda: self.setVM("2"))
+    self.edit_3.valueChanged.connect(             lambda: self.setVM("3"))
+    self.edit_4.valueChanged.connect(             lambda: self.setVM("4"))
+    self.edit_5.valueChanged.connect(             lambda: self.setVM("5"))
+    self.edit_6.valueChanged.connect(             lambda: self.setVM("6"))
+    self.edit_cur_addr.valueChanged.connect(      lambda i: self.setVM("cur_addr", i))
+    self.edit_cf.currentIndexChanged.connect(     lambda index: self.setVM("cf", index))
+    self.edit_of.currentIndexChanged.connect(     lambda index: self.setVM("of", index))
+    self.edit_halted.currentIndexChanged.connect( lambda index: self.setVM("hlt", index))
 
-    self.connect(self.edit_a, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_a))
-    self.connect(self.edit_x, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_x))
-    self.connect(self.edit_j, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_j))
-    self.connect(self.edit_1, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_1))
-    self.connect(self.edit_2, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_2))
-    self.connect(self.edit_3, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_3))
-    self.connect(self.edit_4, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_4))
-    self.connect(self.edit_5, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_5))
-    self.connect(self.edit_6, SIGNAL("valueChanged()"),                 lambda: self.highlight(self.edit_6))
-    self.connect(self.edit_cf, SIGNAL("currentIndexChanged(int)"),      lambda: self.highlight(self.edit_cf))
-    self.connect(self.edit_of, SIGNAL("currentIndexChanged(int)"),      lambda: self.highlight(self.edit_of))
-    self.connect(self.edit_halted, SIGNAL("currentIndexChanged(int)"),  lambda: self.highlight(self.edit_halted))
+    self.edit_a.valueChanged.connect(             lambda: self.highlight(self.edit_a))
+    self.edit_x.valueChanged.connect(             lambda: self.highlight(self.edit_x))
+    self.edit_j.valueChanged.connect(             lambda: self.highlight(self.edit_j))
+    self.edit_1.valueChanged.connect(             lambda: self.highlight(self.edit_1))
+    self.edit_2.valueChanged.connect(             lambda: self.highlight(self.edit_2))
+    self.edit_3.valueChanged.connect(             lambda: self.highlight(self.edit_3))
+    self.edit_4.valueChanged.connect(             lambda: self.highlight(self.edit_4))
+    self.edit_5.valueChanged.connect(             lambda: self.highlight(self.edit_5))
+    self.edit_6.valueChanged.connect(             lambda: self.highlight(self.edit_6))
+    self.edit_cf.currentIndexChanged.connect(     lambda: self.highlight(self.edit_cf))
+    self.edit_of.currentIndexChanged.connect(     lambda: self.highlight(self.edit_of))
+    self.edit_halted.currentIndexChanged.connect( lambda: self.highlight(self.edit_halted))
 
   def initWidgets(self):
     self.setWindowTitle(self.tr("CPU"))
@@ -187,7 +188,7 @@ class CPUDockWidget(QDockWidget):
     self.edit_cycles.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
     self.edit_cycles.setSegmentStyle(QLCDNumber.Flat)
     #self.all_edits.append(self.edit_cycles) # not edited (readonly)
-    self.connect(self.edit_cycles, SIGNAL("overflow()"), self.slot_cycles_overflow)
+    self.edit_cycles.overflow.connect(self.slot_cycles_overflow)
 
     # add box with registers to main_layout
     self.main_layout = QGridLayout()
