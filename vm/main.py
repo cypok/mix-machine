@@ -5,7 +5,7 @@ from vm_errors import *
 from device import *
 
 def print_error(line, error):
-  print "%s: %s" % (line if line is not None else 'GLOBAL', error)
+  print("%s: %s" % (line if line is not None else 'GLOBAL', error))
 
 def print_errors(errors):
   for error in errors:
@@ -13,19 +13,19 @@ def print_errors(errors):
 
 def main():
   if len(sys.argv) != 2: # 1st - program name, 2nd - input filename
-    print ERR_INVALID_ARGS[1]
+    print(ERR_INVALID_ARGS[1])
     return ERR_INVALID_ARGS[0]
 
   try:
     file_in = open(sys.argv[1], "r")
-  except IOError, (errno, strerror):
-    print "%s (%s): %s" % (ERR_INVALID_INPUT_FILE[1], sys.argv[1], strerror)
+  except IOError as e:
+    print("%s (%s): %s" % (ERR_INVALID_INPUT_FILE[1], sys.argv[1], e.strerror))
     return ERR_INVALID_INPUT_FILE[0]
 
 
   memory, start_address, errors = read_memory(file_in.readlines())
   if len(errors) > 0:
-    print ERR_SYNTAX[1]
+    print(ERR_SYNTAX[1])
     print_errors(errors)
     return ERR_SYNTAX[0]
 
@@ -38,13 +38,13 @@ def main():
 
   try:
     while not vmachine.halted:
-      print "----------------------"
+      print("----------------------")
       vmachine.debug_state(sys.stdout)
       vmachine.step()
-    print "----------------------"
+    print("----------------------")
     vmachine.debug_state(sys.stdout)
-  except VMError, error:
-    print ERR_VM_RUN[1]
+  except VMError as error:
+    print(ERR_VM_RUN[1])
     print_error(None, error)
     return ERR_VM_RUN[0]
 

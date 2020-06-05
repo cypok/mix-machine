@@ -103,7 +103,7 @@ class VMLoadTestCase(VMBaseTestCase):
       cycles = 2
     )
 
-    for i in xrange(1, 6+1):
+    for i in range(1, 6+1):
       self.check1(
         memory = {
           10: [+1, 0, 50, 0, 20, 8+i], # 2:4
@@ -130,7 +130,7 @@ class VMLoadTestCase(VMBaseTestCase):
       )
 
   def testRaises(self):
-    for c_code in xrange(8, 23+1):
+    for c_code in range(8, 23+1):
       self.assertRaises(InvalidAddress, self.exec1,
         memory = {
           0 : [+1, 63, 63, 0, 5, c_code]

@@ -21,7 +21,7 @@ class ErrorsList(QListWidget):
     # find absolute position
     text = unicode(self.buddy_text.toPlainText())
     pos = 0
-    for _ in xrange(line_num - 1):
+    for _ in range(line_num - 1):
       pos = text.find('\n', pos) + 1
 
     cursor = self.buddy_text.textCursor()

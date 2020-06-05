@@ -24,8 +24,8 @@ class AssemblyError(Exception):
     else:
       return str(self.info)
 
-  def __cmp__(self, another):
-    return cmp(self.__str__(), another.__str__())
+  def __eq__(self, another):
+    return self.__str__() == another.__str__()
 
 class MissingOperationError(AssemblyError):
   """Syntax error, operation missing"""

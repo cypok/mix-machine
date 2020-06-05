@@ -81,7 +81,7 @@ def _memory_value(adr):
 
   sign = +1 if adr % 2 == 0 else -1
 
-  return [sign] + [ (u_num >> shift) & mask for shift in xrange(24, -1, -6) ] # 24 = 6 * (5-1)
+  return [sign] + [ (u_num >> shift) & mask for shift in range(24, -1, -6) ] # 24 = 6 * (5-1)
 
-for adr in xrange(4000):
+for adr in range(4000):
   _initial_context[adr] = _memory_value(adr)

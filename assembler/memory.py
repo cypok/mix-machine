@@ -1,5 +1,7 @@
 __all__ = [ 'Memory' ]
 
+from functools import reduce
+
 MEMORY_SIZE = 4000
 
 class Memory:
@@ -8,7 +10,7 @@ class Memory:
     return [1, 0 ,0 ,0 ,0 ,0]
 
   def __init__(self):
-    self.memory = [ self.positive_zero()[:] for _ in xrange(MEMORY_SIZE)]
+    self.memory = [ self.positive_zero()[:] for _ in range(MEMORY_SIZE)]
 
   def __getitem__(self, index):
     return self.memory[index]
@@ -23,18 +25,15 @@ class Memory:
     if self.is_valid_address(index):
       self.memory[index][0] = sign
 
-  def __cmp__(self, memory_dict):
+  def __eq__(self, memory_dict):
     """Need for testing"""
     
     positive_zero = self.positive_zero()
     
-    if not isinstance(memory_dict, dict) or \
-       any( (i     in memory_dict and self[i] != memory_dict[i]) or
-            (i not in memory_dict and self[i] != positive_zero)
-            for i in xrange(MEMORY_SIZE)):
-      return 1
-    else:
-      return 0
+    return isinstance(memory_dict, dict) and \
+       all( (i     in memory_dict and self[i] == memory_dict[i]) or
+            (i not in memory_dict and self[i] == positive_zero)
+            for i in range(MEMORY_SIZE))
   
   def is_valid_address(self, adr):
     return 0 <= adr < len(self.memory)
@@ -48,7 +47,7 @@ class Memory:
     mask = 63     # 1<<6 - 1
     u_num = abs(num)
 
-    return [Memory.sign(num)] + [ (u_num >> shift) & mask for shift in xrange(24, -1, -6) ]
+    return [Memory.sign(num)] + [ (u_num >> shift) & mask for shift in range(24, -1, -6) ]
 
   @staticmethod
   def sign(x):
@@ -59,12 +58,12 @@ class Memory:
 
   @staticmethod
   def apply_to_word(value, word, field):
-    l = field / 8
+    l = field // 8
     r = field % 8
     if not ( 0 <= l <= 5 and 0 <= r <= 5 and l <= r ):
       return None
     value_word = Memory.dec2mix(value)
-    for i in xrange(r, max(l - 1, 0), -1): # [r, ..., l]
+    for i in range(r, max(l - 1, 0), -1): # [r, ..., l]
       word[i] = value_word[5 - r + i]
     if l == 0:
       word[0] = value_word[0]

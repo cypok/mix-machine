@@ -66,7 +66,7 @@ class VMJumpTestCase(VMBaseTestCase):
     }
 
     for cf in (-1, 0, 1):
-      for f_code in xrange(4, 9 + 1):
+      for f_code in range(4, 9 + 1):
 
         is_jump = f_code in jumps[cf]
         self.check1(
@@ -105,7 +105,7 @@ class VMJumpTestCase(VMBaseTestCase):
     }
     for reg_value in jumps.keys():
       for reg in c_codes.keys():
-        for f_code in xrange(0, 5 + 1):
+        for f_code in range(0, 5 + 1):
 
           is_jump = f_code in jumps[reg_value]
           self.check1(

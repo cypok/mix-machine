@@ -105,7 +105,7 @@ class VMShiftTestCase(VMBaseTestCase):
     )
 
   def testRaises(self):
-    for f_code in xrange(0, 5 + 1):
+    for f_code in range(0, 5 + 1):
       self.assertRaises(NegativeShift, self.exec1,
         memory = {
           0 : [-1, 0, 3, 0, f_code, 6]

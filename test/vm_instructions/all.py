@@ -15,7 +15,7 @@ def suite(args):
     names = module_names
   else:
     names = [name for name in module_names if name in args]
-  print ">> Testing:", " ".join(names)
+  print(">> Testing:", " ".join(names))
   suites = [test_modules[name].suite for name in names]
 
   return unittest.TestSuite(suites)
@@ -35,7 +35,7 @@ if __name__ == "__main__":
   basetestcase.VMBaseTestCase.set_vm_class(vmtest_realization.VMTesting)
 
   if options.profile:
-    print ">> Profiling enabled"
+    print(">> Profiling enabled")
 
     import hotshot
     import hotshot.stats
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     exp = prof.runcall(unittest.TextTestRunner().run, suite(args))
     prof.close()
     
-    print ">> Please wait for the profiling results..."
+    print(">> Please wait for the profiling results...")
 
     stats = hotshot.stats.load("vm.prof")
     stats.strip_dirs()

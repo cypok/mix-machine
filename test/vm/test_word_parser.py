@@ -1,4 +1,4 @@
-from helper import *
+from .helper import *
 from word_parser import *
 from word import *
 from virt_machine import *

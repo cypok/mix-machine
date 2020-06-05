@@ -27,7 +27,7 @@ def _in_out(vmachine):
   vmachine.cycles += 1
   dev = _get_device(vmachine)
   addr = WordParser.get_full_addr(vmachine, check_mix_addr = True)
-  words_num = dev.block_size/5
+  words_num = dev.block_size//5
   if not vmachine.check_mem_addr(addr + words_num - 1):
     raise IOMemRangeError( (words_num, addr, addr + words_num - 1) )
   return (dev, addr, words_num)
@@ -46,7 +46,7 @@ def in_(vmachine):
   # read bytes
   bytes = dev.read((addr, addr + words_num - 1))
   # write them to memory
-  for i in xrange(words_num):
+  for i in range(words_num):
     vmachine[(addr + i):1:5] = [+1] + bytes[5*i: 5*(i + 1)] # +1 added like a sign to word
   # and lock memory for any actions
   vmachine.lock_cells(vmachine.RW_LOCKED, add = set(range( addr, addr + words_num )))
@@ -64,7 +64,7 @@ def out(vmachine):
 
   # get bytes list from memory
   bytes = []
-  for i in xrange(words_num):
+  for i in range(words_num):
     bytes += vmachine[addr + i].word_list[1:6]
   # write them to file
   dev.write(bytes, (addr, addr + words_num - 1))

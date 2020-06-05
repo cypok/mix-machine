@@ -3,15 +3,15 @@
 # run all tests
 
 import unittest
-import test_parse_argument
-import test_parse_line
-import test_parse_lines
-import test_symbol_table
-import test_memory
-import test_operations
-import test_assemble
-import test_complete_programs
-import test_listing
+from . import test_parse_argument
+from . import test_parse_line
+from . import test_parse_lines
+from . import test_symbol_table
+from . import test_memory
+from . import test_operations
+from . import test_assemble
+from . import test_complete_programs
+from . import test_listing
 
 def suite():
   return unittest.TestSuite((

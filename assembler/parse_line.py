@@ -14,9 +14,9 @@ class Line:
   def __str__(self):
     return "%3i: (%10s) %4s %s" % (self.line_number, self.label, self.operation, self.argument)
 
-  def __cmp__(self, another):
+  def __eq__(self, another):
     """ Mostly needed for tests """
-    return cmp(self.__str__(), another.__str__())
+    return self.__str__() == another.__str__()
 
 def find_first_not_space(line, index):
   for char in line[index:]:
@@ -100,10 +100,10 @@ def parse_lines(lines):
   result = []
 
   has_end = False
-  for i in xrange(len(lines)):
+  for i in range(len(lines)):
     try:
       line = parse_line(lines[i])
-    except AssemblyError, error:
+    except AssemblyError as error:
       errors.append( (i + 1, error) )
     else:
       if line is not None:

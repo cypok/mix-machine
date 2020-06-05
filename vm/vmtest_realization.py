@@ -47,7 +47,7 @@ class VMTesting:
         while not self.vm.halted:
           self.vm.step()
       return self.vm.cycles
-    except VMError, e:
+    except VMError as e:
       raise error_dict[type(e)]
 
   def hook(self, item, old, new):
@@ -84,7 +84,7 @@ class VMTesting:
   def load(self, mega, devs = {}, hook = None):
     memory_part = {}
 
-    for addr, word in mega.iteritems():
+    for addr, word in mega.items():
       if isinstance(addr, int):
         memory_part[addr] = Word(word)
 
@@ -122,7 +122,7 @@ class VMTesting:
 
   def state(self):
     """Returns MEGA hash"""
-    mega = dict([ (i, self.vm[i].word_list[:]) for i in xrange(self.vm.MEMORY_SIZE) ])
+    mega = dict([ (i, self.vm[i].word_list[:]) for i in range(self.vm.MEMORY_SIZE) ])
 
     for reg in "AXJ":
       mega[reg] = self.vm.reg(reg).word_list[:]

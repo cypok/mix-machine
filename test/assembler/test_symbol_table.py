@@ -17,7 +17,7 @@ class LabelsTestCase(unittest.TestCase):
       self.assertEqual(is_label(l), False)
   
   def test_is_local_label(self):
-    for i in xrange(0,10):
+    for i in range(0,10):
       self.assertEqual(is_local_label('%dH' % i), True)
       self.assertEqual(is_local_label('%dh' % i), True)
 
@@ -25,7 +25,7 @@ class LabelsTestCase(unittest.TestCase):
       self.assertEqual(is_local_label(l), False)
 
   def test_is_local_label_reference(self):
-    for i in xrange(0,10):
+    for i in range(0,10):
       self.assertEqual(is_local_label_reference('%df' % i), True)
       self.assertEqual(is_local_label_reference('%dF' % i), True)
       self.assertEqual(is_local_label_reference('%db' % i), True)

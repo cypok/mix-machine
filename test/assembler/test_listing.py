@@ -28,12 +28,12 @@ class ListingTestCase(unittest.TestCase):
 
   def check(self, src, asm, mem, literals, lit_addr, result):
     listing = Listing(src, asm, mem, literals, lit_addr)
-    #print "we have:"
-    #print reduce(lambda x,y: str(x) + '\n' + str(y), listing.lines)
-    #print "we wait:"
-    #print reduce(lambda x,y: str(x) + '\n' + str(y), result)
-    #for i in xrange(len(result)):
-      #print listing.lines[i], result[i]
+    #print("we have:")
+    #print(reduce(lambda x,y: str(x) + '\n' + str(y), listing.lines))
+    #print("we wait:")
+    #print(reduce(lambda x,y: str(x) + '\n' + str(y), result))
+    #for i in range(len(result)):
+      #print(listing.lines[i], result[i])
       #self.assertEqual(listing.lines[i], result[i])
     self.assertEqual(listing.lines, result)
 

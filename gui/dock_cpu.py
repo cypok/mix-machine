@@ -42,7 +42,7 @@ class CPUDockWidget(QDockWidget):
       object.setStyleSheet(HIGHLIGHT_STYLE)
 
   def resetHighlight(self):
-    map(lambda obj: self.highlight(obj, False), self.all_edits)
+    list(map(lambda obj: self.highlight(obj, False), self.all_edits))
 
   def setItem(self, item, value):
     item = item.lower()
@@ -142,7 +142,7 @@ class CPUDockWidget(QDockWidget):
 
     # create all flags:
     # first create all labels
-    for i in xrange(len(flags)):
+    for i in range(len(flags)):
       label = self.__dict__["label_" + flags[i]]   = QLabel(self.tr(label_flags[i]), self)
       label.setObjectName("label_" + flags[i])
       label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)

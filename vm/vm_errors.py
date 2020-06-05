@@ -18,8 +18,8 @@ class VMError(Exception):
     else:
       return str(self.info)
 
-  def __cmp__(self, another):
-    return cmp(str(self), str(another))
+  def __eq__(self, another):
+    return str(self) == str(another)
 
 
 class InvalidStartAddressError(VMError):

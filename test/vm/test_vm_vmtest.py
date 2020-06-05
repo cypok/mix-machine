@@ -1,4 +1,4 @@
-from helper import *
+from .helper import *
 from vmtest_realization import *
 from word import *
 
@@ -47,7 +47,7 @@ class VMTestCase(unittest.TestCase):
     self.assertTrue(all(
       (i     in mega and new_mega[i] == mega[i]) or
       (i not in mega and new_mega[i] == [+1, 0, 0, 0, 0, 0])
-      for i in xrange(vm.vm.MEMORY_SIZE)
+      for i in range(vm.vm.MEMORY_SIZE)
     ))
     for arg in "A X I1 I2 I3 I4 I5 I6 J CA CF OF HLT".split():
       self.assertEqual(mega[arg], new_mega[arg])

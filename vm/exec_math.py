@@ -37,7 +37,7 @@ def mul(vmachine):
   # signs of rA and rX from Knuth
   vmachine["A":0:0] = vmachine["X":0:0] = vmachine["A"][0] * vmachine[addr][0]
 
-  vmachine["A":1:5] = result / MAX_BYTE**5
+  vmachine["A":1:5] = result // MAX_BYTE**5
   vmachine["X":1:5] = result % MAX_BYTE**5
 
 
@@ -57,4 +57,4 @@ def div(vmachine):
   vmachine["X":0:0] = vmachine["A":0:0] # sign of rX is previous sign of rA
   vmachine["A":0:0] = vmachine["A"][0] * divisor_sign # sign of rA - division sign
   vmachine["X":1:5] = u_dividend % u_divisor
-  vmachine["A":1:5] = u_dividend / u_divisor
+  vmachine["A":1:5] = u_dividend // u_divisor

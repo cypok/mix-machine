@@ -1,10 +1,10 @@
 import unittest
-import test_read_memory
-import test_virt_machine
-import test_execution
-import test_word
-import test_word_parser
-import test_vm_vmtest
+from . import test_read_memory
+from . import test_virt_machine
+from . import test_execution
+from . import test_word
+from . import test_word_parser
+from . import test_vm_vmtest
 
 def suite():
   return unittest.TestSuite(

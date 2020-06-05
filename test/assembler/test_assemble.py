@@ -12,7 +12,7 @@ from memory import *
 def print_memory(mem):
   for idx in range(len(mem)):
     if mem[idx] != Memory.positive_zero():
-      print idx, ":", mem[idx]
+      print(idx, ":", mem[idx])
 
 class AssembleTestCase(unittest.TestCase):
   def check(self, lines, labels, local_labels, memory_part, start_address, errors,
@@ -46,7 +46,7 @@ class AssembleTestCase(unittest.TestCase):
       labels = {},
       local_labels = {},
       memory_part = {
-        0: [+1,  1,  0,  0, 02, 05]
+        0: [+1,  1,  0,  0, 2, 5]
       },
       start_address = None,
       errors = [

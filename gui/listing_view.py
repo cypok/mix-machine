@@ -15,7 +15,7 @@ class ListingView(AbstractCodeView):
     self.ModelClass = ListingModel
 
   def updateVM(self, vm_data):
-    for i in xrange(len(self.code_model.lines)):
+    for i in range(len(self.code_model.lines)):
       line = self.code_model.lines[i]
       if line.addr != None and not line.modified and self.snap_mem[line.addr] != self.code_model.words[line.addr]:
         # check if this line was modified before update or now
@@ -114,7 +114,7 @@ class ListingModel(QAbstractTableModel):
       elif column == 1:
         if listing_line.addr is not None:
           if self.is_readable(listing_line.addr):
-            return QVariant(self.words[listing_line.addr].addr_str()) # print first two bytes as one address
+            return QVariant(self.words[listing_line.addr].addr_str()) # print(first two bytes as one address)
           else:
             return QVariant(self.tr("LOCKED"))
         else:
@@ -184,7 +184,7 @@ class ListingModel(QAbstractTableModel):
   def create_addr2num_data(self):
     self.addr2num_data = dict([
         (self.lines[i].addr, i)
-        for i in xrange(len(self.lines)) if self.lines[i].addr is not None
+        for i in range(len(self.lines)) if self.lines[i].addr is not None
     ])
 
   def addr2num(self, addr):

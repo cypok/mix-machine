@@ -1,3 +1,5 @@
+from functools import reduce
+
 from vm_errors import *
 
 MAX_BYTE = 64
@@ -11,7 +13,7 @@ class Word:
   def from_dec(num):
     mask = MAX_BYTE - 1  # 1<<6 - 1
     u_num = abs(num)
-    return [Word.sign(num)] + [ int((u_num >> shift) & mask) for shift in xrange(24, -1, -6) ] # 24 = 6 * (5-1)
+    return [Word.sign(num)] + [ int((u_num >> shift) & mask) for shift in range(24, -1, -6) ] # 24 = 6 * (5-1)
 
   @staticmethod
   def norm_2bytes(addr):
@@ -27,37 +29,39 @@ class Word:
             and all([ 0 <= byte < MAX_BYTE for byte in word_list[1:6]])
 
   def __getitem__(self, x):
-    return self.word_list[x]
+    if isinstance(x, slice):
+      l = max(x.start, 0) if x.start is not None else 0
+      r = min(x.stop, 5) if x.stop is not None else 5
+      if x.step is not None:
+        raise ValueError("unsupported operation")
+      new = Word()
+      if l == 0:
+        new[0] = self[0]
+      for i in range(r, max(l - 1, 0), -1):
+        new[5 - r + i] = self[i]
+      return new
+    else:
+      return self.word_list[x]
 
   def __setitem__(self, x, value):
-    self.word_list[x] = value
-
-  def __getslice__(self, l, r):
-    l = max(l, 0)
-    r = min(r, 5)
-    new = Word()
-    if l == 0:
-      new[0] = self[0]
-    for i in xrange(r, max(l-1, 0), -1):
-      new[5 - r + i] = self[i]
-    return new
-
-  def __setslice__(self, l, r, value):
-    l = max(l, 0)
-    r = min(r, 5)
-    word = Word(value)
-    if l == 0:
-      self[0] = word[0]
-    for i in xrange(r, max(l-1, 0), -1):
-      self[i] = word[5 - r + i]
+    if isinstance(x, slice):
+      l = max(x.start, 0)
+      r = min(x.stop, 5)
+      word = Word(value)
+      if l == 0:
+        self[0] = word[0]
+      for i in range(r, max(l-1, 0), -1):
+        self[i] = word[5 - r + i]
+    else:
+      self.word_list[x] = value
 
   def is_zero(self):
     return self.word_list[1:] == ([0] * 5)
 
-  def __cmp__(self, cmp_word):
-    if self.is_zero() and cmp_word.is_zero():
-      return 0
-    return 0 if all(self[i] == cmp_word[i] for i in xrange(0, 6)) else 1
+
+  def __eq__(self, cmp_word):
+    return self.is_zero() and cmp_word.is_zero() or \
+      all(self[i] == cmp_word[i] for i in range(0, 6))
 
   def __str__(self):
     return reduce(lambda x, y: "%s %02i" % (x, y), self.word_list[1:6], "+" if self[0] == 1 else "-")
@@ -70,7 +74,7 @@ class Word:
       self.word_list = [+1, 0, 0, 0, 0, 0]
     elif isinstance(obj, list) or isinstance(obj, tuple):
       self.word_list = list(obj)
-    elif isinstance(obj, int) or isinstance(obj, long):
+    elif isinstance(obj, int):
       self.word_list = self.from_dec(obj)
     elif isinstance(obj, Word):
       self.word_list = obj.word_list[:]

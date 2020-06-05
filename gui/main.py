@@ -178,8 +178,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
       self.statusBar().showMessage(self.tr("File has been saved."), 2000)
 
-    except IOError, (errno, errtext):
-      QMessageBox.critical(None, self.tr("Error"), errtext)
+    except IOError as e:
+      QMessageBox.critical(None, self.tr("Error"), e.strerror)
       self.statusBar().showMessage(self.tr("Error saving file."), 2000)
 
     else:
@@ -194,8 +194,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
       
       self.setWindowModified(False)
 
-    except IOError, (errno, errtext):
-      QMessageBox.critical(None, self.tr("Error"), errtext)
+    except IOError as e:
+      QMessageBox.critical(None, self.tr("Error"), e.strerror)
       self.statusBar().showMessage(self.tr("Error loading file."), 2000)
 
     else:
@@ -263,7 +263,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     try:
       self.start_action()
       action()
-    except Exception, err:
+    except Exception as err:
       self.stop_action()
       if type(err) in self.vm_data.vm_errors:
         QMessageBox.critical(self, self.tr("Runtime error"), str(err))

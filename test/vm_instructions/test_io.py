@@ -62,12 +62,12 @@ class VMIOTestCase(VMBaseTestCase):
         'RW_LOCKED' : set([3000, 3001, 3002])
       },
       # fill zeros memory from 128 to 150
-      memory = dict(
+      memory = dict(list(
         {
           0   : [+1, 2, 0, 0, 18, 37], # out 128(18)
           151 : [+1, 0, 0, 0, 0, 10],
-        }.items() +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(128, 151)]
+        }.items()) +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(128, 151)]
       ) ,
       devs = {
         18 : (0, 'w', 24*5, 24*2, out_file)
@@ -75,7 +75,7 @@ class VMIOTestCase(VMBaseTestCase):
       diff = {
         'W_LOCKED' : set([2000, 2001, 2002]),
         'CA' : 1,
-        'W_LOCKED' : set([2000, 2001, 2002] + range(128, 152))
+        'W_LOCKED' : set([2000, 2001, 2002] + list(range(128, 152)))
       },
       cycles = 1
     )
@@ -91,7 +91,7 @@ class VMIOTestCase(VMBaseTestCase):
         'RW_LOCKED' : set([3000, 3001, 3002])
       },
       # fill zeros memory from 128 to 150
-      memory = dict(
+      memory = dict(list(
         {
           0   : [+1, 2, 0, 0, 18, 37], # out 128(18)
           1   : [+1, 0, 1, 0, 18, 34], # jbus *(18)
@@ -100,8 +100,8 @@ class VMIOTestCase(VMBaseTestCase):
           4   : [+1, 2, 0, 0, 18, 37], # out 128(18)
           5   : [+1, 0, 0, 0, 2, 5], # hlt
           151 : [+1, 0, 0, 0, 0, 10],
-        }.items() +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(128, 151)]
+        }.items()) +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(128, 151)]
       ) ,
       devs = {
         18 : (0, 'w', 24*5, 24*2, out_file)
@@ -109,7 +109,7 @@ class VMIOTestCase(VMBaseTestCase):
       diff = {
         'CA' : 5,
         'J' : [+1, 0, 0, 0, 0, 4],
-        'W_LOCKED' : set([2000, 2001, 2002] + range(128, 152)),
+        'W_LOCKED' : set([2000, 2001, 2002] + list(range(128, 152))),
         'HLT' : 1
       },
       cycles = 109
@@ -276,7 +276,7 @@ class VMIOTestCase(VMBaseTestCase):
         'RW_LOCKED' : set([3000, 3001, 3002])
       },
       # fill zeros memory from 128 to 140
-      memory = dict(
+      memory = dict(list(
         {
           0   : [+1, 2, 0, 0, 19, 36], # in 128(19)
           1   : [+1, 0, 1, 0, 19, 34], # jbus *
@@ -285,19 +285,19 @@ class VMIOTestCase(VMBaseTestCase):
           4   : [+1, 2, 0, 0, 19, 36], # in 128(19)
           5   : [+1, 0, 5, 0, 19, 34], # jbus *
           6   : [+1, 0, 0, 0, 2, 5] # hlt
-        }.items() +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(128, 142)]
+        }.items()) +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(128, 142)]
       ) ,
       devs = {
         19 : (0, 'r', 14*5, 14*2, in_file)
       },
-      diff = dict({
+      diff = dict(list({
         'RW_LOCKED' : set([3000, 3001, 3002]),
         'CA' : 6,
         128 : [+1, 0, 1, 2, 3, 4],
         'J'  : [+1, 0, 0, 0, 0, 6],
         'HLT': 1
-      }.items() + [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(129, 140)]),
+      }.items()) + [(x, [+1, 0, 0, 0, 0, 0]) for x in range(129, 140)]),
       cycles = 97
     )
 
@@ -418,33 +418,33 @@ class VMIOTestCase(VMBaseTestCase):
   def testDoubles(self):
     self.check_hlt(
       # fill zeros memory from 128 to 140
-      memory = dict(
+      memory = dict(list(
         {
           0   : [+1, 2, 0, 0, 19, 36], # in 128(19)
           1   : [+1, 2, 0, 0, 19, 36], # in 128(19)
           2   : [+1, 2, 0, 0, 19, 36], # in 128(19)
           3   : [+1, 0, 3, 0, 19, 34], # jbus *
           4   : [+1, 0, 0, 0, 2, 5] # hlt
-        }.items() +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(128, 142)]
+        }.items()) +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(128, 142)]
       ) ,
       devs = {
         19 : (0, 'r', 14*5, 14*2, open("19.dev", "r"))
       },
-      diff = dict({
+      diff = dict(list({
         'RW_LOCKED' : set([]),
         'CA' : 4,
         128 : [+1, 0, 1, 2, 3, 4],
         'J'  : [+1, 0, 0, 0, 0, 4],
         'HLT': 1
-      }.items() + [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(129, 140)]),
+      }.items()) + [(x, [+1, 0, 0, 0, 0, 0]) for x in range(129, 140)]),
       cycles = 95
     )
 
     out_file = open("18.dev", "w")
     self.check_hlt(
       # fill zeros memory from 128 to 150
-      memory = dict(
+      memory = dict(list(
         {
           0   : [+1, 2, 0, 0, 18, 37], # out 128(18)
           1   : [+1, 2, 0, 0, 18, 37], # out 128(18)
@@ -455,22 +455,22 @@ class VMIOTestCase(VMBaseTestCase):
           6   : [+1, 0, 6, 0, 19, 34], # jbus *
           7   : [+1, 0, 0, 0, 2, 5], # hlt
           151 : [+1, 0, 0, 0, 0, 10]
-        }.items() +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(128, 151)] +
-        [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(168, 182)]
+        }.items()) +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(128, 151)] +
+        [(x, [+1, 0, 0, 0, 0, 0]) for x in range(168, 182)]
       ) ,
       devs = {
         18 : (0, 'w', 24*5, 24*2, out_file),
         19 : (0, 'r', 14*5, 14*2, open("19.dev", "r"))
       },
-      diff = dict({
+      diff = dict(list({
         'RW_LOCKED' : set([]),
         'W_LOCKED' : set([]),
         'J' : [+1, 0, 0, 0, 0, 7],
         'CA' : 7,
         'HLT' : 1,
         168 : [+1, 0, 1, 2, 3, 4]
-      }.items() + [(x, [+1, 0, 0, 0, 0, 0]) for x in xrange(169, 180)]),
+      }.items()) + [(x, [+1, 0, 0, 0, 0, 0]) for x in range(169, 180)]),
       cycles = 165
     )
     out_file.close()

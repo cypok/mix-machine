@@ -14,10 +14,10 @@ class VMData:
     self.listing = asm_data.listing
 
     err_dict = vm_errors.__dict__
-    self.vm_errors = map(
+    self.vm_errors = list(map(
         lambda x : err_dict[x],
         [item for item in err_dict.keys() if item[-5:] == "Error"]
-    )
+    ))
 
   def mem(self, addr):
     return self.vm[addr]

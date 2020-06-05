@@ -68,7 +68,7 @@ class QTextEditInputDevice(Device):
       line += " " * (self.block_size - len(line))
     else:
       line = line[:self.block_size]
-    bytes = map(Device._ord, line)
+    bytes = list(map(Device._ord, line))
     return bytes
 
   def control(self):

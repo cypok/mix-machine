@@ -41,7 +41,7 @@ class Assembler:
         else:
           Assembler.__dict__["_do_" + line.operation.lower()](self, line)
 
-      except AssemblyError, err:
+      except AssemblyError as err:
         self._add_error(line, err)
 
   def _do_instruction(self, line):
@@ -127,7 +127,7 @@ class Assembler:
     if line.label is not None:
       try:
           self.symtable.set_label(line.label, self.ca, line.line_number)
-      except AssemblyError, err:
+      except AssemblyError as err:
         self._add_error(line, err)
 
   def _check_address(self, line):

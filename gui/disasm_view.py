@@ -15,7 +15,7 @@ class DisassemblerView(AbstractCodeView):
     self.ModelClass = DisassemblerModel
 
   def updateVM(self, vm_data):
-    for i in xrange(self.code_model.mem_len):
+    for i in range(self.code_model.mem_len):
       if not self.code_model.modified[i] and self.snap_mem[i] != self.code_model.words[i]:
         self.code_model.modified[i] = True
         self.code_model.lineChanged(i)
@@ -32,7 +32,7 @@ class DisassemblerModel(QAbstractTableModel):
     if vm_data is not None:
       self.words = vm_data.vm.memory
       self.mem_len = vm_data.vm.MEMORY_SIZE
-      self.modified = [False for _ in xrange(self.mem_len)]
+      self.modified = [False for _ in range(self.mem_len)]
       self.is_readable = vm_data.is_readable
       self.is_locked = lambda x: not (vm_data.is_readable(x) and vm_data.is_writeable(x))
       self.ca = vm_data.ca()
@@ -105,7 +105,7 @@ class DisassemblerModel(QAbstractTableModel):
 
       elif index.column() == 1:
         if self.is_readable(i):
-          return QVariant(self.words[i].addr_str()) # print first two bytes as one address
+          return QVariant(self.words[i].addr_str()) # print(first two bytes as one address)
         else:
           return QVariant(self.tr("LOCKED"))
 

@@ -91,7 +91,7 @@ class Disasm:
         elif f == 5: # 5 = (0:5) - default for all but STJ
           f_str = "" # don't show f_part (it's default for this instruction)
         else:
-          f_str = "(%i:%i)" % (f/8, f%8)
+          f_str = "(%i:%i)" % (f//8, f%8)
       else:
         if f in self.labels:
           f_str = "("+self.labels[f]+")"

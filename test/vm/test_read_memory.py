@@ -1,4 +1,4 @@
-from helper import *
+from .helper import *
 from read_memory import *
 
 class ReadMemoryTestCase(unittest.TestCase):
@@ -7,7 +7,7 @@ class ReadMemoryTestCase(unittest.TestCase):
     for arg, error in tests:
       try:
         func(arg)
-      except Exception, e:
+      except Exception as e:
         self.assertEqual(e, error)
       else:
         self.fail("Excepted error in '%s'" % arg)

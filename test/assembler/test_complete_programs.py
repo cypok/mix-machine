@@ -10,7 +10,7 @@ from assemble import Assembler
 
 def print_errors(errors):
   for error in errors:
-    print "%04i: %s" % (error[0], error[1])
+    print("%04i: %s" % (error[0], error[1]))
 
 class CompleteProgramsTestCase(unittest.TestCase):
   def test(self):
@@ -30,7 +30,7 @@ class CompleteProgramsTestCase(unittest.TestCase):
     with open(fname, "r") as f:
       lines, errors = parse_lines(f.readlines())
       if errors != []:
-        print "------------------------------\n",fname, '\nParse_line errors:'
+        print("------------------------------\n",fname, '\nParse_line errors:')
         print_errors(errors)
       self.assertEqual(errors, [])
 
@@ -38,7 +38,7 @@ class CompleteProgramsTestCase(unittest.TestCase):
       asm.run(lines)
 
       if asm.errors != []:
-        print "------------------------------\n",fname, '\nAssemble errors:'
+        print("------------------------------\n",fname, '\nAssemble errors:')
         print_errors(asm.errors)
       self.assertEqual(asm.errors, [])
 

@@ -1,4 +1,4 @@
-from helper import *
+from .helper import *
 from word import *
 
 class WordTestCase(unittest.TestCase):
@@ -7,8 +7,8 @@ class WordTestCase(unittest.TestCase):
       ([+1,  0,  0,  0,  0,  0], True),
       ([-1, MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1], True),
       ([+1, MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1,  MAX_BYTE-1], True),
-      ([-1, MAX_BYTE/2,  MAX_BYTE/2,  MAX_BYTE/2,  MAX_BYTE/2,  MAX_BYTE/2], True),
-      ([+1, 0,  MAX_BYTE/2,  0,  MAX_BYTE/2,  0], True),
+      ([-1, MAX_BYTE//2,  MAX_BYTE//2,  MAX_BYTE//2,  MAX_BYTE//2,  MAX_BYTE//2], True),
+      ([+1, 0,  MAX_BYTE//2,  0,  MAX_BYTE//2,  0], True),
       ([+2,  0,  0,  0,  0,  0], False),
       ([-2,  0,  0,  0,  0,  0], False),
       ([-2,  0,  0, -1,  0,  0], False),

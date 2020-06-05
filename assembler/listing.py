@@ -26,11 +26,8 @@ class ListingLine:
     else:
       return " "*4 + " | " + " "*16 + " | %s" % (self.addr2str(), self.word2str(), self.line)
 
-  def __cmp__(self, other):
-    if self.addr != other.addr or self.word != other.word or self.line != other.line:
-      return 1
-    else:
-      return 0
+  def __eq__(self, other):
+    return self.addr == other.addr and self.word == other.word and self.line == other.line
 
 class Listing:
   def __str__(self):
@@ -38,7 +35,7 @@ class Listing:
 
   def __init__(self, src_lines, asm_lines, memory, literals, literals_address):
     # None added: so first line will have index 1
-    self.lines = map(lambda string: ListingLine(line = string.rstrip('\r\n')), src_lines)
+    self.lines = list(map(lambda string: ListingLine(line = string.rstrip('\r\n')), src_lines))
     self.asm_lines = asm_lines
     self.memory = memory
     self.literals = literals

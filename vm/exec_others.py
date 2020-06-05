@@ -1,6 +1,7 @@
 # nop (c_code = 0), hlt, num, char (c_code = 5), move (c_code = 7)
 
 # ALL DONE
+from functools import reduce
 
 from word import *
 from word_parser import *
@@ -29,7 +30,7 @@ def char(vmachine):
   # vmachine.rA[1:5] - num for convert
   # str(num) - convert to string
   # map(lambda x : int(x) + 30, s) - get list of mix-chars
-  seq = map(lambda x : int(x) + 30, str(int(vmachine["A":1:5])))
+  seq = list(map(lambda x : int(x) + 30, str(int(vmachine["A":1:5]))))
   seq = [30] * (10 - len(seq)) + seq
   vmachine["A":1:5] = [+1] + seq[0:5] # +1 added like a sign to word
   vmachine["X":1:5] = [+1] + seq[5:10] # +1 added like a sign to word
@@ -53,7 +54,7 @@ def move(vmachine):
     raise InvalidMoveError( (num, src, dst) )
   # now all addresses would be greater than dst or src, so they are >= 0
   try:
-    for i in xrange(num):
+    for i in range(num):
       vmachine[dst] = vmachine[src+i]
       dst += 1 # dst - like r1 always contains address of next destination word
       vmachine["cycles"] += 2

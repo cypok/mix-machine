@@ -21,7 +21,7 @@ class WordParser:
   @staticmethod
   def get_field_spec(vmachine):
     word = vmachine.get_cur_word()
-    l = word[4] / 8
+    l = word[4] // 8
     r = word[4] % 8
     if not (0 <= l <= r <= 5):
       raise InvalidFieldSpecError("%i:%i=%i" % (l, r, word[4]))

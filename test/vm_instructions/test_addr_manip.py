@@ -73,7 +73,7 @@ class VMAddrManipTestCase(VMBaseTestCase):
   def testINCandDEC(self):
     # testing normal work
     indexes = "A I1 I2 I3 I4 I5 I6 X".split()
-    for i in xrange(len(indexes)):
+    for i in range(len(indexes)):
       index = indexes[i]
       self.check1(
         regs = { index : [-1, 0, 0, 0, 55, 44] },
@@ -151,7 +151,7 @@ class VMAddrManipTestCase(VMBaseTestCase):
   def testRaises(self):
     # to test not all rI, but only one - it's faster
     for c_code in (48, 50, 55): # A, I2, X
-      for f_code in xrange(4):
+      for f_code in range(4):
         self.assertRaises(InvalidIndex, self.exec1,
           memory = {
             0 : [+1, 63, 63, 44, f_code, c_code]

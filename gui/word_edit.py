@@ -41,7 +41,7 @@ def word2str(word, type = WORD, content_type = BASIC):
   else:
     line = "+" if word[0] == 1 else "-"
   if type == WORD:
-    for byte in xrange(1 if content_type == BASIC else 4, 6):
+    for byte in range(1 if content_type == BASIC else 4, 6):
       line += " %02i" % word[byte]
     if content_type == REGJ:
       line = line[1:] # remove first space
@@ -50,7 +50,7 @@ def word2str(word, type = WORD, content_type = BASIC):
     line += str(int(word[1 if content_type == BASIC else 4:5]))
 
   elif type == STR:
-    for byte in xrange(1 if content_type == BASIC else 4, 6):
+    for byte in range(1 if content_type == BASIC else 4, 6):
       line += charset.chr(word[byte], "?")
   return line
 
@@ -72,7 +72,7 @@ def str2word(line, type, content_type, allow_mesgBox = False):
     nums = line.split()
     nums = [0] * (5 - len(nums)) + nums # set len(nums) to 5
     len_nums = len(nums)
-    for byte in xrange(5, 0, -1):
+    for byte in range(5, 0, -1):
       word[byte] = min(63, int(nums[byte - 1]))
 
   elif type == INT:
@@ -91,7 +91,7 @@ def str2word(line, type, content_type, allow_mesgBox = False):
     else:
       # 2) rI or rJ: 3 spaces added to the start and some spaces added to the end
       line = "   " + line + " " * (2 - len(line)) # set len(line) to 5
-    for byte in xrange(1, 6):
+    for byte in range(1, 6):
       assert( line[byte - 1] != '?')
       word[byte] = charset.ord(line[byte - 1])
   return word
@@ -207,6 +207,6 @@ if __name__ == "__main__":
   app = QApplication(sys.argv)
 
   mw = WordEdit([-1, 5, 4, 3, 2, 1])
-  print mw.exec_(), mw.word
+  print(mw.exec_(), mw.word)
 
   sys.exit()
