@@ -73,7 +73,6 @@ class VMIOTestCase(VMBaseTestCase):
         18 : (0, 'w', 24*5, 24*2, out_file)
       },
       diff = {
-        'W_LOCKED' : set([2000, 2001, 2002]),
         'CA' : 1,
         'W_LOCKED' : set([2000, 2001, 2002] + list(range(128, 152)))
       },

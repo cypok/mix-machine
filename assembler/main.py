@@ -47,9 +47,9 @@ def main():
     file_out = open(sys.argv[2] if arg_number == 2 else DEFAULT_OUT_NAME, 'w')
   except IOError as e:
     file_in.close()
-    print("%s (%s): %s" % (ERR_INVALID_OUTPUT_FILE[1],)
+    print("%s (%s): %s" % (ERR_INVALID_OUTPUT_FILE[1],
                            sys.argv[2] if arg_number == 2 else DEFAULT_OUT_NAME,
-                           e.strerror)
+                           e.strerror))
     return ERR_INVALID_OUTPUT_FILE[0]
 
   src_lines = file_in.readlines()

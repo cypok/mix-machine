@@ -24,7 +24,7 @@ class ListingLine:
     if self.addr is not None:
       return "%4s | %16s | %s" % (self.addr2str(), self.word2str(), self.line)
     else:
-      return " "*4 + " | " + " "*16 + " | %s" % (self.addr2str(), self.word2str(), self.line)
+      return " "*4 + " | " + " "*16 + " | %s" % (self.line)
 
   def __eq__(self, other):
     return self.addr == other.addr and self.word == other.word and self.line == other.line

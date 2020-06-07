@@ -81,7 +81,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     self.errors_list.setBuddyText(self.txt_source)
 
-    self.file_filters = self.tr("MIX source files (*.mix);;All files (*.*)");
+    self.file_filters = self.tr("MIX source files (*.mix);;All files (*.*)")
     self.slot_File_New()
 
     about_text = self.tr("""
@@ -126,14 +126,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     self.setNewSource.emit()
 
-    self.statusBar().showMessage(self.tr("Empty source file has been created."), 2000);
+    self.statusBar().showMessage(self.tr("Empty source file has been created."), 2000)
 
   def checkUnsaved(self):
     if not self.isWindowModified():
       return True
 
-    button = QMessageBox.information(self, PROGRAM_NAME, \
-        self.tr("Document was changed!"), \
+    button = QMessageBox.information(self, PROGRAM_NAME,
+        self.tr("Document was changed!"),
         QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
 
     if button == QMessageBox.Save:
@@ -162,7 +162,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
       self.saveToFile(self.cur_file)
 
   def slot_File_SaveAs(self):
-    fn = QFileDialog.getSaveFileName(self, self.tr("Choose file to save to..."), \
+    fn = QFileDialog.getSaveFileName(self, self.tr("Choose file to save to..."),
         self.cur_file, self.file_filters)
 
     if fn != "":

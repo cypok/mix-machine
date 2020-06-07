@@ -25,7 +25,7 @@ def jred(vmachine): _j(vmachine, lambda vm: _get_device(vmachine).busy == False)
 
 def jmp(vmachine):    _j(vmachine, lambda vm: True)
 def jsj(vmachine):    _j(vmachine, lambda vm: True, save_j = False)
-def jov(vmachine):    _j(vmachine, lambda vm: vm["of"] == True, reset_of = 1)
+def jov(vmachine):    _j(vmachine, lambda vm: vm["of"] == True, reset_of = True)
 def jnov(vmachine):   _j(vmachine, lambda vm: vm["of"] == False)
 def jl(vmachine):     _j(vmachine, lambda vm: vm["cf"] < 0)
 def je(vmachine):     _j(vmachine, lambda vm: vm["cf"] == 0)
