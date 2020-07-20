@@ -38,17 +38,12 @@ def main():
 
   try:
     while not vmachine.halted:
-      print("----------------------")
-      vmachine.debug_state(sys.stdout)
       vmachine.step()
-    print("----------------------")
-    vmachine.debug_state(sys.stdout)
   except VMError as error:
     print(ERR_VM_RUN[1])
     print_error(None, error)
     return ERR_VM_RUN[0]
 
-  vmachine.debug_mem(sys.stdout, 128, 150)
   out_file.close()
   in_file.close()
 
