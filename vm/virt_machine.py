@@ -18,13 +18,14 @@ class VMachine:
       return self.__dict__[x]
     if isinstance(x, slice): # slice, vm[2000:2:4] = ...
       item = x.start
+      sliced = True
       left = x.stop if x.stop is not None else 0
       right = x.step if x.step is not None else 5
     else: # vm[2000] = ...
       item = x
-      left = 0
-      right = 5
-    return (self.memory[item] if isinstance(item, int) else self.reg(item))[left:right]
+      sliced = False
+    whole = (self.memory[item] if isinstance(item, int) else self.reg(item))
+    return whole[left:right] if sliced else whole
 
   def __setitem__(self, x, value):
     """Can raise exception"""
@@ -45,6 +46,7 @@ class VMachine:
     else:
       # we are working with registers or triggers
       if item in TRIGGERS:
+        assert left == 0 and right == 5
         self.__dict__[item] = value
         changed = old_value != self[item]
       else: # register
