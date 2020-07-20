@@ -1,3 +1,5 @@
+from functools import reduce
+
 from parse_line import Line
 
 class ListingLine:
